@@ -6,7 +6,9 @@
   "scripts": {
     "build:html": "node src/planner.js",
     "build": "npm run build:html && npm run build:pdf",
-    "build:pdf": "node scripts/render-pdf.js"
+    "build:pdf": "node scripts/render-pdf.js",
+    "check:output": "node scripts/check-output.js",
+    "verify": "npm run build:html && npm run check:output"
   },
   "devDependencies": {
     "playwright": "^1.53.0"

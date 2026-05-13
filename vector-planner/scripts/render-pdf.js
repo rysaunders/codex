@@ -1,7 +1,9 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
-const root = path.resolve('vector-planner');
+const scripts = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(scripts, '..');
 const htmlPath = path.join(root, 'output', 'vector-planner.html');
 const pdfPath = path.join(root, 'output', 'vector-planner.pdf');
 

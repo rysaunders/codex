@@ -2,44 +2,597 @@
   --bg: #f4f1e8;
   --ink: #1e1e1a;
   --muted: #6e6a61;
-  --rule: #b8b1a4;
-  --grid: #d8d2c6;
+  --rule: #aaa398;
+  --rule-light: #d4cec2;
+  --grid-dot: rgba(110, 106, 97, .20);
+  --grid-line: rgba(110, 106, 97, .10);
 }
+
 * { box-sizing: border-box; }
-body { margin: 0; background: #ddd; font-family: Inter, "Helvetica Neue", Arial, sans-serif; color: var(--ink); }
-#planner { display: grid; gap: 8mm; justify-content: center; padding: 8mm 0; }
+
+body {
+  margin: 0;
+  background: #ddd;
+  color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-feature-settings: "tnum";
+}
+
+#planner {
+  display: grid;
+  gap: 8mm;
+  justify-content: center;
+  padding: 8mm 0;
+}
+
 .page {
   width: 148mm;
   height: 210mm;
   background: var(--bg);
-  padding: 10mm 10mm 10mm 14mm;
+  padding: 10mm 10mm 14mm 14mm;
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-.page.right { padding: 10mm 14mm 10mm 10mm; }
-.page.black { background: #111; color: #d8d3c8; }
-.header { display: flex; justify-content: space-between; font-size: 8pt; color: var(--muted); margin-bottom: 4mm; }
-.h { font-size: 8px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 2mm; }
-.block { border: .25mm solid var(--rule); padding: 2.5mm; margin-bottom: 2.5mm; }
-.block.lg { min-height: 24mm; }
-.lines div { border-bottom: .2mm solid var(--rule); height: 6mm; }
-.twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
-.dot {
-  background-image: radial-gradient(var(--grid) .22mm, transparent .24mm);
-  background-size: 4mm 4mm;
+
+.page.right {
+  padding: 10mm 14mm 14mm 10mm;
 }
-.grid {
-  background-image: linear-gradient(to right, var(--grid) .2mm, transparent .2mm), linear-gradient(to bottom, var(--grid) .2mm, transparent .2mm);
+
+.page.black {
+  background: #111;
+  color: #d8d3c8;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8mm;
+  border-bottom: .35mm solid var(--rule);
+  padding-bottom: 3mm;
+  margin-bottom: 5mm;
+}
+
+.page-heading {
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: .12em;
+  font-weight: 500;
+}
+
+.page-meta {
+  min-width: 34mm;
+  color: var(--muted);
+  font-size: 7pt;
+  line-height: 1.65;
+  text-align: right;
+}
+
+.eyebrow,
+.section-label,
+.method-label {
+  color: var(--ink);
+  font-size: 6.8pt;
+  font-weight: 700;
+  letter-spacing: .14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 6pt;
+  margin-bottom: 2mm;
+}
+
+.prompt {
+  color: var(--muted);
+  font-size: 6.4pt;
+  line-height: 1.35;
+  margin-top: 1.2mm;
+}
+
+.thin-rule {
+  border-top: .25mm solid var(--rule);
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5mm;
+  row-gap: 4mm;
+}
+
+.ruled-area,
+.dot-grid-area {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.ruled-area .write-zone,
+.dot-grid-area .write-zone {
+  margin-top: 2mm;
+}
+
+.ruled-area .write-zone {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 7.8mm,
+    var(--rule-light) 8mm
+  );
+}
+
+.dot-grid-area .write-zone,
+.dot-grid-surface {
+  background-image: radial-gradient(var(--grid-dot) .18mm, transparent .22mm);
   background-size: 5mm 5mm;
 }
-.footer { position: absolute; bottom: 6mm; left: 0; right: 0; text-align: center; font-size: 7px; color: var(--muted); letter-spacing: .08em; }
-.cover-title { margin-top: 35mm; font-size: 26pt; letter-spacing: .12em; }
-.cover-sub { margin-top: 2mm; font-size: 10pt; letter-spacing: .18em; }
+
+.ruled-area.sm .write-zone,
+.dot-grid-area.sm .write-zone { min-height: 15mm; }
+
+.ruled-area.md .write-zone,
+.dot-grid-area.md .write-zone { min-height: 24mm; }
+
+.ruled-area.lg .write-zone,
+.dot-grid-area.lg .write-zone { min-height: 34mm; }
+
+.ruled-area.xl .write-zone,
+.dot-grid-area.xl .write-zone { min-height: 45mm; }
+
+.footer {
+  position: absolute;
+  bottom: 5.5mm;
+  left: 0;
+  right: 0;
+  color: var(--muted);
+  font-size: 6.5px;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.cover-title {
+  margin-top: 35mm;
+  font-size: 26pt;
+  letter-spacing: .12em;
+}
+
+.cover-sub {
+  margin-top: 2mm;
+  font-size: 10pt;
+  letter-spacing: .18em;
+}
+
+.cover-rule {
+  width: 16mm;
+  border-top: .25mm solid #777;
+  margin-top: 14mm;
+}
+
+.cover-principles {
+  margin-top: auto;
+  margin-bottom: 16mm;
+  font-size: 8pt;
+  line-height: 2;
+  letter-spacing: .14em;
+}
+
+.cover-meta {
+  font-size: 7pt;
+  letter-spacing: .12em;
+  margin-bottom: 2mm;
+}
+
+/* Method page */
+.method-page {
+  padding-bottom: 15mm;
+}
+
+.method-subtitle {
+  color: var(--muted);
+  font-size: 8pt;
+  letter-spacing: .04em;
+  margin-top: -2mm;
+  margin-bottom: 8mm;
+}
+
+.method-ladder {
+  display: grid;
+  gap: 2mm;
+}
+
+.method-step {
+  display: grid;
+  grid-template-columns: 16mm 1fr 8mm;
+  align-items: start;
+  border-top: .25mm solid var(--rule-light);
+  min-height: 19mm;
+  padding: 3mm 0 2.5mm;
+}
+
+.method-step:first-child {
+  border-top-color: var(--rule);
+}
+
+.method-number {
+  color: var(--muted);
+  font-size: 18pt;
+  font-weight: 300;
+  letter-spacing: .04em;
+  line-height: .9;
+}
+
+.method-copy {
+  font-size: 9.5pt;
+  line-height: 1.35;
+  margin-top: 2mm;
+}
+
+.method-connector {
+  color: var(--muted);
+  font-size: 10pt;
+  text-align: right;
+}
+
+.operating-standard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 4mm;
+  border-top: .35mm solid var(--rule);
+  margin-top: auto;
+  padding-top: 3mm;
+  font-size: 7.5pt;
+  line-height: 1.35;
+}
+
+.operating-standard .section-label {
+  grid-column: 1 / -1;
+  margin-bottom: 1mm;
+}
+
+/* Quarterly compass */
+.compass-page {
+  padding-bottom: 15mm;
+}
+
+.compass-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "theme north"
+    "outcomes outcomes"
+    "focus standards"
+    "constraints risks";
+  grid-template-rows: 33mm 49mm 38mm 32mm;
+  column-gap: 5mm;
+  row-gap: 5mm;
+}
+
+.compass-theme { grid-area: theme; }
+.compass-north-star { grid-area: north; }
+.compass-outcomes { grid-area: outcomes; }
+.compass-focus { grid-area: focus; }
+.compass-standards { grid-area: standards; }
+.compass-constraints { grid-area: constraints; }
+.compass-risks { grid-area: risks; }
+
+.compass-grid .ruled-area,
+.weekly-planning-stack .ruled-area,
+.daily-orientation-stack .ruled-area {
+  min-height: 0;
+}
+
+.compass-grid .write-zone,
+.weekly-planning-stack .write-zone,
+.daily-orientation-stack .write-zone {
+  height: calc(100% - 8mm);
+  min-height: 0;
+}
+
+/* Weekly planning */
+.weekly-page {
+  padding-bottom: 15mm;
+}
+
+.weekly-planning-stack {
+  display: grid;
+  grid-template-rows: 25mm 34mm 43mm 26mm 26mm;
+  gap: 4mm;
+}
+
+.weekly-support-grid {
+  grid-template-rows: 1fr 1fr;
+}
+
+/* Daily orientation */
+.daily-orientation-page {
+  padding-bottom: 15mm;
+}
+
+.daily-orientation-stack {
+  display: grid;
+  grid-template-rows: 34mm 35mm 31mm 1fr;
+  gap: 4mm;
+  flex: 1;
+}
+
+.mission-critical,
+.physical-state-section,
+.friction-scan {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.mission-row {
+  display: grid;
+  grid-template-columns: 9mm 1fr;
+  align-items: end;
+  gap: 3mm;
+  min-height: 8mm;
+  border-bottom: .25mm solid var(--rule-light);
+  color: var(--muted);
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.mission-row:first-of-type {
+  margin-top: 2mm;
+}
+
+.physical-state-section {
+  display: grid;
+  grid-template-rows: auto repeat(4, 1fr);
+  gap: 1.6mm;
+}
+
+.state-row {
+  display: grid;
+  grid-template-columns: 31mm 28mm 1fr;
+  align-items: center;
+  column-gap: 4mm;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.8pt;
+  letter-spacing: .08em;
+  min-height: 5.5mm;
+  text-transform: uppercase;
+}
+
+.state-dots {
+  display: flex;
+  gap: 2mm;
+}
+
+.state-dots span {
+  width: 2mm;
+  height: 2mm;
+  border: .2mm solid var(--rule);
+  border-radius: 50%;
+}
+
+.state-note {
+  border-bottom: .2mm solid var(--rule-light);
+  height: 4mm;
+}
+
+.friction-scan {
+  display: flex;
+  flex-direction: column;
+}
+
+.friction-grid {
+  flex: 1;
+  margin-top: 3mm;
+}
+
+.friction-grid .ruled-area {
+  height: 100%;
+}
+
+/* Daily execution */
+.daily-execution-page {
+  padding-bottom: 15mm;
+}
+
+.training-log-section,
+.evening-calibration {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.training-log-section {
+  min-height: 68mm;
+}
+
+.training-layout {
+  display: grid;
+  grid-template-columns: 1fr 39mm;
+  gap: 4mm;
+  align-items: stretch;
+  min-height: 51mm;
+  margin-top: 2mm;
+  border-top: .25mm solid var(--rule);
+  border-bottom: .25mm solid var(--rule);
+}
+
+.training-writing {
+  min-height: 51mm;
+}
+
+.stat-panel {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  align-self: stretch;
+  background: var(--bg);
+  border-left: .25mm solid var(--rule);
+  border-right: .25mm solid var(--rule);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 14mm 1fr;
+  min-height: 0;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.6pt;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.stat-row:last-child {
+  border-bottom: 0;
+}
+
+.stat-row div {
+  display: flex;
+  align-items: center;
+  padding: 1.5mm 2mm;
+}
+
+.stat-row div:first-child {
+  color: var(--muted);
+  font-weight: 700;
+  border-right: .25mm solid var(--rule-light);
+}
+
+.daily-notes-area {
+  min-height: 42mm;
+  margin-top: 3.5mm;
+}
+
+.daily-notes-area .write-zone {
+  min-height: 30mm;
+}
+
+.evening-calibration {
+  margin-top: 3.5mm;
+  min-height: 43mm;
+}
+
+.calibration-choice-row {
+  display: grid;
+  grid-template-columns: 1fr 20mm 25mm 25mm;
+  align-items: center;
+  gap: 3mm;
+  margin-top: 4mm;
+  font-size: 6.6pt;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.calibration-choice-row span {
+  display: inline-block;
+  width: 2.8mm;
+  height: 2.8mm;
+  border: .2mm solid var(--rule);
+  border-radius: 50%;
+  vertical-align: -0.6mm;
+}
+
+.calibration-line {
+  display: grid;
+  grid-template-columns: 38mm 1fr;
+  align-items: end;
+  column-gap: 4mm;
+  min-height: 8.5mm;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.6pt;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Weekly review */
+.weekly-review-page {
+  padding-bottom: 15mm;
+}
+
+.weekly-review-layout {
+  display: grid;
+  grid-template-columns: 1fr 42mm;
+  gap: 6mm;
+  flex: 1;
+}
+
+.review-main-column {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 3mm;
+}
+
+.review-prompt {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.review-write-line {
+  height: calc(100% - 7mm);
+  min-height: 13mm;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 7.8mm,
+    var(--rule-light) 8mm
+  );
+}
+
+.review-side-column {
+  border-left: .25mm solid var(--rule-light);
+  padding-left: 5mm;
+}
+
+.scorecard {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 1fr 10mm;
+  align-items: center;
+  min-height: 8mm;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.8pt;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.score-row div:last-child {
+  color: var(--muted);
+  text-align: right;
+}
+
+.next-vector-area {
+  margin-top: 9mm;
+}
+
+/* Notes */
+.notes-page {
+  padding-bottom: 15mm;
+}
+
+.full-note-grid {
+  flex: 1;
+  border-top: .25mm solid var(--rule);
+}
+
 @page { size: A5 portrait; margin: 0; }
+
 @media print {
-  body { margin: 0; background: none; }
-  #planner { gap: 0; padding: 0; }
-  .page { break-after: page; }
+  body {
+    margin: 0;
+    background: none;
+  }
+
+  #planner {
+    gap: 0;
+    padding: 0;
+  }
+
+  .page {
+    break-after: page;
+  }
 }

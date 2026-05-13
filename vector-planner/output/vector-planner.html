@@ -1,46 +1,2232 @@
-<!doctype html><html><head><meta charset="utf-8"><title>VECTOR Planner</title><style>:root {
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>VECTOR Planner</title>
+    <style>:root {
   --bg: #f4f1e8;
   --ink: #1e1e1a;
   --muted: #6e6a61;
-  --rule: #b8b1a4;
-  --grid: #d8d2c6;
+  --rule: #aaa398;
+  --rule-light: #d4cec2;
+  --grid-dot: rgba(110, 106, 97, .20);
+  --grid-line: rgba(110, 106, 97, .10);
 }
+
 * { box-sizing: border-box; }
-body { margin: 0; background: #ddd; font-family: Inter, "Helvetica Neue", Arial, sans-serif; color: var(--ink); }
-#planner { display: grid; gap: 8mm; justify-content: center; padding: 8mm 0; }
+
+body {
+  margin: 0;
+  background: #ddd;
+  color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-feature-settings: "tnum";
+}
+
+#planner {
+  display: grid;
+  gap: 8mm;
+  justify-content: center;
+  padding: 8mm 0;
+}
+
 .page {
   width: 148mm;
   height: 210mm;
   background: var(--bg);
-  padding: 10mm 10mm 10mm 14mm;
+  padding: 10mm 10mm 14mm 14mm;
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-.page.right { padding: 10mm 14mm 10mm 10mm; }
-.page.black { background: #111; color: #d8d3c8; }
-.header { display: flex; justify-content: space-between; font-size: 8pt; color: var(--muted); margin-bottom: 4mm; }
-.h { font-size: 8px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 2mm; }
-.block { border: .25mm solid var(--rule); padding: 2.5mm; margin-bottom: 2.5mm; }
-.block.lg { min-height: 24mm; }
-.lines div { border-bottom: .2mm solid var(--rule); height: 6mm; }
-.twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
-.dot {
-  background-image: radial-gradient(var(--grid) .22mm, transparent .24mm);
-  background-size: 4mm 4mm;
+
+.page.right {
+  padding: 10mm 14mm 14mm 10mm;
 }
-.grid {
-  background-image: linear-gradient(to right, var(--grid) .2mm, transparent .2mm), linear-gradient(to bottom, var(--grid) .2mm, transparent .2mm);
+
+.page.black {
+  background: #111;
+  color: #d8d3c8;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8mm;
+  border-bottom: .35mm solid var(--rule);
+  padding-bottom: 3mm;
+  margin-bottom: 5mm;
+}
+
+.page-heading {
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: .12em;
+  font-weight: 500;
+}
+
+.page-meta {
+  min-width: 34mm;
+  color: var(--muted);
+  font-size: 7pt;
+  line-height: 1.65;
+  text-align: right;
+}
+
+.eyebrow,
+.section-label,
+.method-label {
+  color: var(--ink);
+  font-size: 6.8pt;
+  font-weight: 700;
+  letter-spacing: .14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 6pt;
+  margin-bottom: 2mm;
+}
+
+.prompt {
+  color: var(--muted);
+  font-size: 6.4pt;
+  line-height: 1.35;
+  margin-top: 1.2mm;
+}
+
+.thin-rule {
+  border-top: .25mm solid var(--rule);
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5mm;
+  row-gap: 4mm;
+}
+
+.ruled-area,
+.dot-grid-area {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.ruled-area .write-zone,
+.dot-grid-area .write-zone {
+  margin-top: 2mm;
+}
+
+.ruled-area .write-zone {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 7.8mm,
+    var(--rule-light) 8mm
+  );
+}
+
+.dot-grid-area .write-zone,
+.dot-grid-surface {
+  background-image: radial-gradient(var(--grid-dot) .18mm, transparent .22mm);
   background-size: 5mm 5mm;
 }
-.footer { position: absolute; bottom: 6mm; left: 0; right: 0; text-align: center; font-size: 7px; color: var(--muted); letter-spacing: .08em; }
-.cover-title { margin-top: 35mm; font-size: 26pt; letter-spacing: .12em; }
-.cover-sub { margin-top: 2mm; font-size: 10pt; letter-spacing: .18em; }
-@page { size: A5 portrait; margin: 0; }
-@media print {
-  body { margin: 0; background: none; }
-  #planner { gap: 0; padding: 0; }
-  .page { break-after: page; }
+
+.ruled-area.sm .write-zone,
+.dot-grid-area.sm .write-zone { min-height: 15mm; }
+
+.ruled-area.md .write-zone,
+.dot-grid-area.md .write-zone { min-height: 24mm; }
+
+.ruled-area.lg .write-zone,
+.dot-grid-area.lg .write-zone { min-height: 34mm; }
+
+.ruled-area.xl .write-zone,
+.dot-grid-area.xl .write-zone { min-height: 45mm; }
+
+.footer {
+  position: absolute;
+  bottom: 5.5mm;
+  left: 0;
+  right: 0;
+  color: var(--muted);
+  font-size: 6.5px;
+  letter-spacing: .08em;
+  text-align: center;
 }
-</style></head><body><main id="planner"><section class="page black"><div class="cover-title">VECTOR</div><div class="cover-sub">OPERATOR JOURNAL</div><div style="margin-top:16mm;font-size:8pt;letter-spacing:.14em">DIRECTION > DISCIPLINE > CAPABILITY</div><div style="margin-top:4mm;font-size:8pt">Range: Daily · Edition 01</div><div class="footer">VECTOR / COVER / 001</div></section><section class="page"><div style="font-size:14pt;letter-spacing:.08em">VECTOR METHOD</div><div class="block lg"><div class="h">Orient</div>identify the day’s direction.</div><div class="block lg"><div class="h">Select</div>choose only what can move the needle.</div><div class="block lg"><div class="h">Reduce Friction</div>remove the obvious failure point before it wins.</div><div class="block lg"><div class="h">Execute</div>train, work, connect, recover.</div><div class="block lg"><div class="h">Calibrate</div>close the loop without drama.</div><div class="footer">VECTOR / METHOD / 002</div></section><section class="page"><div style="font-size:12pt;letter-spacing:.08em">QUARTERLY COMPASS</div><div class="twocol"><div class="block lg"><div class="h">Quarter / Date Range</div></div><div class="block lg"><div class="h">Phase</div></div><div class="block lg"><div class="h">Theme</div></div><div class="block lg"><div class="h">North Star</div></div><div class="block lg"><div class="h">Outcomes</div></div><div class="block lg"><div class="h">Focus Areas</div></div><div class="block lg"><div class="h">Constraints</div></div><div class="block lg"><div class="h">Risks / Friction</div></div></div><div class="block lg"><div class="h">Standards</div></div><div class="footer">VECTOR / COMPASS / 003</div></section><section class="page"><div style="font-size:12pt;letter-spacing:.08em">WEEKLY PLANNING</div><div class="header"><div>Week of</div><div>Phase: Hyrox Base</div></div><div class="block"><div class="h">Primary Vector</div><div class="lines"><div></div><div></div></div></div><div class="block"><div class="h">Mission Critical This Week</div><div class="lines"><div></div><div></div><div></div></div></div><div class="twocol"><div class="block"><div class="h">Training Targets</div></div><div class="block"><div class="h">Recovery / Sleep Target</div></div><div class="block"><div class="h">Relationship / Family Anchor</div></div><div class="block"><div class="h">Work / Build Focus</div></div></div><div class="block"><div class="h">Known Friction</div></div><div class="block"><div class="h">Pre-Commitments</div></div><div class="footer">VECTOR / WEEKLY / 004</div></section><section class="page"><div class="header"><div>May 11, 2026 · Monday</div><div>Phase: Hyrox Base</div></div><div class="block lg"><div class="h">Primary Vector</div>What matters most today?</div><div class="block"><div class="h">Mission Critical</div>01<br>02<br>03</div><div class="block"><div class="h">Physical State</div>Sleep · Energy · Recovery · Training Readiness</div><div class="block lg" style="border-width:.45mm"><div class="h">Friction Scan</div>What might derail today?<br><br>How will I reduce it?</div><div class="footer">VECTOR / DAILY / 005</div></section><section class="page right"><div class="header"><div>May 11, 2026 · Monday</div><div>Execution & Calibration</div></div><div class="block lg"><div class="h">Training / Movement</div>Time · RPE · HR Avg · Calories · Notes</div><div class="block lg dot" style="flex:1"><div class="h">Notes / Observations</div></div><div class="block"><div class="h">Evening Calibration</div>Did I move forward? Yes / Neutral / Drifted<br>What created momentum?<br>What created friction?<br>One adjustment for tomorrow.</div><div class="footer">VECTOR / DAILY / 006</div></section><section class="page"><div class="header"><div>May 12, 2026 · Tuesday</div><div>Phase: Hyrox Base</div></div><div class="block lg"><div class="h">Primary Vector</div>What matters most today?</div><div class="block"><div class="h">Mission Critical</div>01<br>02<br>03</div><div class="block"><div class="h">Physical State</div>Sleep · Energy · Recovery · Training Readiness</div><div class="block lg" style="border-width:.45mm"><div class="h">Friction Scan</div>What might derail today?<br><br>How will I reduce it?</div><div class="footer">VECTOR / DAILY / 007</div></section><section class="page right"><div class="header"><div>May 12, 2026 · Tuesday</div><div>Execution & Calibration</div></div><div class="block lg"><div class="h">Training / Movement</div>Time · RPE · HR Avg · Calories · Notes</div><div class="block lg dot" style="flex:1"><div class="h">Notes / Observations</div></div><div class="block"><div class="h">Evening Calibration</div>Did I move forward? Yes / Neutral / Drifted<br>What created momentum?<br>What created friction?<br>One adjustment for tomorrow.</div><div class="footer">VECTOR / DAILY / 008</div></section><section class="page"><div class="header"><div>May 13, 2026 · Wednesday</div><div>Phase: Hyrox Base</div></div><div class="block lg"><div class="h">Primary Vector</div>What matters most today?</div><div class="block"><div class="h">Mission Critical</div>01<br>02<br>03</div><div class="block"><div class="h">Physical State</div>Sleep · Energy · Recovery · Training Readiness</div><div class="block lg" style="border-width:.45mm"><div class="h">Friction Scan</div>What might derail today?<br><br>How will I reduce it?</div><div class="footer">VECTOR / DAILY / 009</div></section><section class="page right"><div class="header"><div>May 13, 2026 · Wednesday</div><div>Execution & Calibration</div></div><div class="block lg"><div class="h">Training / Movement</div>Time · RPE · HR Avg · Calories · Notes</div><div class="block lg dot" style="flex:1"><div class="h">Notes / Observations</div></div><div class="block"><div class="h">Evening Calibration</div>Did I move forward? Yes / Neutral / Drifted<br>What created momentum?<br>What created friction?<br>One adjustment for tomorrow.</div><div class="footer">VECTOR / DAILY / 010</div></section><section class="page"><div class="header"><div>May 14, 2026 · Thursday</div><div>Phase: Hyrox Base</div></div><div class="block lg"><div class="h">Primary Vector</div>What matters most today?</div><div class="block"><div class="h">Mission Critical</div>01<br>02<br>03</div><div class="block"><div class="h">Physical State</div>Sleep · Energy · Recovery · Training Readiness</div><div class="block lg" style="border-width:.45mm"><div class="h">Friction Scan</div>What might derail today?<br><br>How will I reduce it?</div><div class="footer">VECTOR / DAILY / 011</div></section><section class="page right"><div class="header"><div>May 14, 2026 · Thursday</div><div>Execution & Calibration</div></div><div class="block lg"><div class="h">Training / Movement</div>Time · RPE · HR Avg · Calories · Notes</div><div class="block lg dot" style="flex:1"><div class="h">Notes / Observations</div></div><div class="block"><div class="h">Evening Calibration</div>Did I move forward? Yes / Neutral / Drifted<br>What created momentum?<br>What created friction?<br>One adjustment for tomorrow.</div><div class="footer">VECTOR / DAILY / 012</div></section><section class="page"><div class="header"><div>May 15, 2026 · Friday</div><div>Phase: Hyrox Base</div></div><div class="block lg"><div class="h">Primary Vector</div>What matters most today?</div><div class="block"><div class="h">Mission Critical</div>01<br>02<br>03</div><div class="block"><div class="h">Physical State</div>Sleep · Energy · Recovery · Training Readiness</div><div class="block lg" style="border-width:.45mm"><div class="h">Friction Scan</div>What might derail today?<br><br>How will I reduce it?</div><div class="footer">VECTOR / DAILY / 013</div></section><section class="page right"><div class="header"><div>May 15, 2026 · Friday</div><div>Execution & Calibration</div></div><div class="block lg"><div class="h">Training / Movement</div>Time · RPE · HR Avg · Calories · Notes</div><div class="block lg dot" style="flex:1"><div class="h">Notes / Observations</div></div><div class="block"><div class="h">Evening Calibration</div>Did I move forward? Yes / Neutral / Drifted<br>What created momentum?<br>What created friction?<br>One adjustment for tomorrow.</div><div class="footer">VECTOR / DAILY / 014</div></section><section class="page"><div class="header"><div>May 16, 2026 · Saturday</div><div>Phase: Hyrox Base</div></div><div class="block lg"><div class="h">Primary Vector</div>What matters most today?</div><div class="block"><div class="h">Mission Critical</div>01<br>02<br>03</div><div class="block"><div class="h">Physical State</div>Sleep · Energy · Recovery · Training Readiness</div><div class="block lg" style="border-width:.45mm"><div class="h">Friction Scan</div>What might derail today?<br><br>How will I reduce it?</div><div class="footer">VECTOR / DAILY / 015</div></section><section class="page right"><div class="header"><div>May 16, 2026 · Saturday</div><div>Execution & Calibration</div></div><div class="block lg"><div class="h">Training / Movement</div>Time · RPE · HR Avg · Calories · Notes</div><div class="block lg dot" style="flex:1"><div class="h">Notes / Observations</div></div><div class="block"><div class="h">Evening Calibration</div>Did I move forward? Yes / Neutral / Drifted<br>What created momentum?<br>What created friction?<br>One adjustment for tomorrow.</div><div class="footer">VECTOR / DAILY / 016</div></section><section class="page"><div class="header"><div>May 17, 2026 · Sunday</div><div>Phase: Hyrox Base</div></div><div class="block lg"><div class="h">Primary Vector</div>What matters most today?</div><div class="block"><div class="h">Mission Critical</div>01<br>02<br>03</div><div class="block"><div class="h">Physical State</div>Sleep · Energy · Recovery · Training Readiness</div><div class="block lg" style="border-width:.45mm"><div class="h">Friction Scan</div>What might derail today?<br><br>How will I reduce it?</div><div class="footer">VECTOR / DAILY / 017</div></section><section class="page right"><div class="header"><div>May 17, 2026 · Sunday</div><div>Execution & Calibration</div></div><div class="block lg"><div class="h">Training / Movement</div>Time · RPE · HR Avg · Calories · Notes</div><div class="block lg dot" style="flex:1"><div class="h">Notes / Observations</div></div><div class="block"><div class="h">Evening Calibration</div>Did I move forward? Yes / Neutral / Drifted<br>What created momentum?<br>What created friction?<br>One adjustment for tomorrow.</div><div class="footer">VECTOR / DAILY / 018</div></section><section class="page"><div style="font-size:12pt;letter-spacing:.08em">WEEKLY REVIEW</div><div class="block">Week of</div><div class="block lg">What actually mattered this week?</div><div class="block lg">What produced disproportionate value?</div><div class="block lg">What drained energy without return?</div><div class="block">Where did I avoid discomfort?</div><div class="block">What strengthened me? / What weakened me?</div><div class="block">Scorecard: Training · Focus · Recovery · Nutrition · Relationships · Finances · Growth · Overall (1-10)</div><div class="block">Next Week: Primary Vector</div><div class="footer">VECTOR / REVIEW / 019</div></section><section class="page dot"><div class="h">NOTES</div><div class="footer">VECTOR / NOTES / 020</div></section><section class="page grid"><div class="h">NOTES</div><div class="footer">VECTOR / NOTES / 021</div></section></main></body></html>
+
+.cover-title {
+  margin-top: 35mm;
+  font-size: 26pt;
+  letter-spacing: .12em;
+}
+
+.cover-sub {
+  margin-top: 2mm;
+  font-size: 10pt;
+  letter-spacing: .18em;
+}
+
+.cover-rule {
+  width: 16mm;
+  border-top: .25mm solid #777;
+  margin-top: 14mm;
+}
+
+.cover-principles {
+  margin-top: auto;
+  margin-bottom: 16mm;
+  font-size: 8pt;
+  line-height: 2;
+  letter-spacing: .14em;
+}
+
+.cover-meta {
+  font-size: 7pt;
+  letter-spacing: .12em;
+  margin-bottom: 2mm;
+}
+
+/* Method page */
+.method-page {
+  padding-bottom: 15mm;
+}
+
+.method-subtitle {
+  color: var(--muted);
+  font-size: 8pt;
+  letter-spacing: .04em;
+  margin-top: -2mm;
+  margin-bottom: 8mm;
+}
+
+.method-ladder {
+  display: grid;
+  gap: 2mm;
+}
+
+.method-step {
+  display: grid;
+  grid-template-columns: 16mm 1fr 8mm;
+  align-items: start;
+  border-top: .25mm solid var(--rule-light);
+  min-height: 19mm;
+  padding: 3mm 0 2.5mm;
+}
+
+.method-step:first-child {
+  border-top-color: var(--rule);
+}
+
+.method-number {
+  color: var(--muted);
+  font-size: 18pt;
+  font-weight: 300;
+  letter-spacing: .04em;
+  line-height: .9;
+}
+
+.method-copy {
+  font-size: 9.5pt;
+  line-height: 1.35;
+  margin-top: 2mm;
+}
+
+.method-connector {
+  color: var(--muted);
+  font-size: 10pt;
+  text-align: right;
+}
+
+.operating-standard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 4mm;
+  border-top: .35mm solid var(--rule);
+  margin-top: auto;
+  padding-top: 3mm;
+  font-size: 7.5pt;
+  line-height: 1.35;
+}
+
+.operating-standard .section-label {
+  grid-column: 1 / -1;
+  margin-bottom: 1mm;
+}
+
+/* Quarterly compass */
+.compass-page {
+  padding-bottom: 15mm;
+}
+
+.compass-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "theme north"
+    "outcomes outcomes"
+    "focus standards"
+    "constraints risks";
+  grid-template-rows: 33mm 49mm 38mm 32mm;
+  column-gap: 5mm;
+  row-gap: 5mm;
+}
+
+.compass-theme { grid-area: theme; }
+.compass-north-star { grid-area: north; }
+.compass-outcomes { grid-area: outcomes; }
+.compass-focus { grid-area: focus; }
+.compass-standards { grid-area: standards; }
+.compass-constraints { grid-area: constraints; }
+.compass-risks { grid-area: risks; }
+
+.compass-grid .ruled-area,
+.weekly-planning-stack .ruled-area,
+.daily-orientation-stack .ruled-area {
+  min-height: 0;
+}
+
+.compass-grid .write-zone,
+.weekly-planning-stack .write-zone,
+.daily-orientation-stack .write-zone {
+  height: calc(100% - 8mm);
+  min-height: 0;
+}
+
+/* Weekly planning */
+.weekly-page {
+  padding-bottom: 15mm;
+}
+
+.weekly-planning-stack {
+  display: grid;
+  grid-template-rows: 25mm 34mm 43mm 26mm 26mm;
+  gap: 4mm;
+}
+
+.weekly-support-grid {
+  grid-template-rows: 1fr 1fr;
+}
+
+/* Daily orientation */
+.daily-orientation-page {
+  padding-bottom: 15mm;
+}
+
+.daily-orientation-stack {
+  display: grid;
+  grid-template-rows: 34mm 35mm 31mm 1fr;
+  gap: 4mm;
+  flex: 1;
+}
+
+.mission-critical,
+.physical-state-section,
+.friction-scan {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.mission-row {
+  display: grid;
+  grid-template-columns: 9mm 1fr;
+  align-items: end;
+  gap: 3mm;
+  min-height: 8mm;
+  border-bottom: .25mm solid var(--rule-light);
+  color: var(--muted);
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.mission-row:first-of-type {
+  margin-top: 2mm;
+}
+
+.physical-state-section {
+  display: grid;
+  grid-template-rows: auto repeat(4, 1fr);
+  gap: 1.6mm;
+}
+
+.state-row {
+  display: grid;
+  grid-template-columns: 31mm 28mm 1fr;
+  align-items: center;
+  column-gap: 4mm;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.8pt;
+  letter-spacing: .08em;
+  min-height: 5.5mm;
+  text-transform: uppercase;
+}
+
+.state-dots {
+  display: flex;
+  gap: 2mm;
+}
+
+.state-dots span {
+  width: 2mm;
+  height: 2mm;
+  border: .2mm solid var(--rule);
+  border-radius: 50%;
+}
+
+.state-note {
+  border-bottom: .2mm solid var(--rule-light);
+  height: 4mm;
+}
+
+.friction-scan {
+  display: flex;
+  flex-direction: column;
+}
+
+.friction-grid {
+  flex: 1;
+  margin-top: 3mm;
+}
+
+.friction-grid .ruled-area {
+  height: 100%;
+}
+
+/* Daily execution */
+.daily-execution-page {
+  padding-bottom: 15mm;
+}
+
+.training-log-section,
+.evening-calibration {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.training-log-section {
+  min-height: 68mm;
+}
+
+.training-layout {
+  display: grid;
+  grid-template-columns: 1fr 39mm;
+  gap: 4mm;
+  align-items: stretch;
+  min-height: 51mm;
+  margin-top: 2mm;
+  border-top: .25mm solid var(--rule);
+  border-bottom: .25mm solid var(--rule);
+}
+
+.training-writing {
+  min-height: 51mm;
+}
+
+.stat-panel {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  align-self: stretch;
+  background: var(--bg);
+  border-left: .25mm solid var(--rule);
+  border-right: .25mm solid var(--rule);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 14mm 1fr;
+  min-height: 0;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.6pt;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.stat-row:last-child {
+  border-bottom: 0;
+}
+
+.stat-row div {
+  display: flex;
+  align-items: center;
+  padding: 1.5mm 2mm;
+}
+
+.stat-row div:first-child {
+  color: var(--muted);
+  font-weight: 700;
+  border-right: .25mm solid var(--rule-light);
+}
+
+.daily-notes-area {
+  min-height: 42mm;
+  margin-top: 3.5mm;
+}
+
+.daily-notes-area .write-zone {
+  min-height: 30mm;
+}
+
+.evening-calibration {
+  margin-top: 3.5mm;
+  min-height: 43mm;
+}
+
+.calibration-choice-row {
+  display: grid;
+  grid-template-columns: 1fr 20mm 25mm 25mm;
+  align-items: center;
+  gap: 3mm;
+  margin-top: 4mm;
+  font-size: 6.6pt;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.calibration-choice-row span {
+  display: inline-block;
+  width: 2.8mm;
+  height: 2.8mm;
+  border: .2mm solid var(--rule);
+  border-radius: 50%;
+  vertical-align: -0.6mm;
+}
+
+.calibration-line {
+  display: grid;
+  grid-template-columns: 38mm 1fr;
+  align-items: end;
+  column-gap: 4mm;
+  min-height: 8.5mm;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.6pt;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Weekly review */
+.weekly-review-page {
+  padding-bottom: 15mm;
+}
+
+.weekly-review-layout {
+  display: grid;
+  grid-template-columns: 1fr 42mm;
+  gap: 6mm;
+  flex: 1;
+}
+
+.review-main-column {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 3mm;
+}
+
+.review-prompt {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.review-write-line {
+  height: calc(100% - 7mm);
+  min-height: 13mm;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 7.8mm,
+    var(--rule-light) 8mm
+  );
+}
+
+.review-side-column {
+  border-left: .25mm solid var(--rule-light);
+  padding-left: 5mm;
+}
+
+.scorecard {
+  border-top: .25mm solid var(--rule);
+  padding-top: 2.5mm;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 1fr 10mm;
+  align-items: center;
+  min-height: 8mm;
+  border-bottom: .25mm solid var(--rule-light);
+  font-size: 6.8pt;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.score-row div:last-child {
+  color: var(--muted);
+  text-align: right;
+}
+
+.next-vector-area {
+  margin-top: 9mm;
+}
+
+/* Notes */
+.notes-page {
+  padding-bottom: 15mm;
+}
+
+.full-note-grid {
+  flex: 1;
+  border-top: .25mm solid var(--rule);
+}
+
+@page { size: A5 portrait; margin: 0; }
+
+@media print {
+  body {
+    margin: 0;
+    background: none;
+  }
+
+  #planner {
+    gap: 0;
+    padding: 0;
+  }
+
+  .page {
+    break-after: page;
+  }
+}
+</style>
+  </head>
+  <body>
+    <main id="planner">
+  <section class="page black">
+    <div class="cover-title">VECTOR</div>
+    <div class="cover-sub">Operator Journal</div>
+    <div class="cover-rule"></div>
+    <div class="cover-principles">DIRECTION &gt;<br>DISCIPLINE &gt;<br>CAPABILITY &gt;</div>
+    <div class="cover-meta">Range: Daily</div>
+    <div class="cover-meta">Edition 01</div>
+    <div class="footer">VECTOR / COVER / 001</div>
+  </section>
+
+    <section class="page method-page">
+      
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">VECTOR METHOD</div>
+    </div>
+    <div class="page-meta"></div>
+  </div>
+
+      <div class="method-subtitle">Orient the day. Remove friction. Close the loop.</div>
+      <div class="method-ladder">
+        
+          <div class="method-step">
+            <div class="method-number">01</div>
+            <div>
+              <div class="method-label">Orient</div>
+              <div class="method-copy">Identify the day&#39;s direction.</div>
+            </div>
+            <div class="method-connector">↓</div>
+          </div>
+        
+          <div class="method-step">
+            <div class="method-number">02</div>
+            <div>
+              <div class="method-label">Select</div>
+              <div class="method-copy">Choose only what can move the needle.</div>
+            </div>
+            <div class="method-connector">↓</div>
+          </div>
+        
+          <div class="method-step">
+            <div class="method-number">03</div>
+            <div>
+              <div class="method-label">Reduce Friction</div>
+              <div class="method-copy">Remove the obvious failure point before it wins.</div>
+            </div>
+            <div class="method-connector">↓</div>
+          </div>
+        
+          <div class="method-step">
+            <div class="method-number">04</div>
+            <div>
+              <div class="method-label">Execute</div>
+              <div class="method-copy">Train, work, connect, recover.</div>
+            </div>
+            <div class="method-connector">↓</div>
+          </div>
+        
+          <div class="method-step">
+            <div class="method-number">05</div>
+            <div>
+              <div class="method-label">Calibrate</div>
+              <div class="method-copy">Close the loop without drama.</div>
+            </div>
+            <div></div>
+          </div>
+        
+      </div>
+      <div class="operating-standard">
+        <div class="section-label">Operating Standard</div>
+        <div>Direction before tasks.</div>
+        <div>Friction before discipline.</div>
+        <div>Calibration before judgment.</div>
+      </div>
+      <div class="footer">VECTOR / METHOD / 002</div>
+    </section>
+  
+  <section class="page compass-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">QUARTERLY COMPASS</div>
+    </div>
+    <div class="page-meta"><div>Quarter / Date Range</div><div>Phase</div></div>
+  </div>
+
+    <div class="compass-grid">
+      
+  <section class="ruled-area lg compass-theme">
+    <div class="section-label">Theme</div>
+    <div class="prompt">What is the operating theme for this quarter?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area lg compass-north-star">
+    <div class="section-label">North Star</div>
+    <div class="prompt">The why behind it all.</div>
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area xl compass-outcomes">
+    <div class="section-label">Outcomes</div>
+    <div class="prompt">What will success look like?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area lg compass-focus">
+    <div class="section-label">Focus Areas</div>
+    <div class="prompt">Where will attention concentrate?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area lg compass-standards">
+    <div class="section-label">Standards</div>
+    <div class="prompt">What must remain true?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area md compass-constraints">
+    <div class="section-label">Constraints</div>
+    <div class="prompt">Known limits and non-negotiables.</div>
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area md compass-risks">
+    <div class="section-label">Risks / Friction</div>
+    <div class="prompt">What could slow or derail execution?</div>
+    <div class="write-zone"></div>
+  </section>
+
+    </div>
+    <div class="footer">VECTOR / COMPASS / 003</div>
+  </section>
+
+  <section class="page weekly-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">WEEKLY PLANNING</div>
+    </div>
+    <div class="page-meta"><div>Week of</div><div>Phase: Hyrox Base</div></div>
+  </div>
+
+    <div class="weekly-planning-stack">
+      
+  <section class="ruled-area md ">
+    <div class="section-label">Primary Vector</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area lg ">
+    <div class="section-label">Mission Critical This Week</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+      <div class="two-column weekly-support-grid">
+        
+  <section class="ruled-area sm ">
+    <div class="section-label">Training Targets</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        
+  <section class="ruled-area sm ">
+    <div class="section-label">Recovery / Sleep Target</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        
+  <section class="ruled-area sm ">
+    <div class="section-label">Relationship / Family Anchor</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        
+  <section class="ruled-area sm ">
+    <div class="section-label">Work / Build Focus</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+      </div>
+      
+  <section class="ruled-area md ">
+    <div class="section-label">Known Friction</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+      
+  <section class="ruled-area md ">
+    <div class="section-label">Pre-Commitments</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+    </div>
+    <div class="footer">VECTOR / WEEKLY / 004</div>
+  </section>
+
+  <section class="page daily-orientation-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 11, 2026 · Monday</div>
+    </div>
+    <div class="page-meta">Phase: Hyrox Base</div>
+  </div>
+
+    <div class="daily-orientation-stack">
+      
+  <section class="ruled-area lg primary-vector-area">
+    <div class="section-label">Primary Vector</div>
+    <div class="prompt">What matters most today?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="two-column friction-grid">
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">What might derail today?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">How will I reduce it?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        </div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 005</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 11, 2026 · Monday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 006</div>
+  </section>
+
+  <section class="page daily-orientation-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 12, 2026 · Tuesday</div>
+    </div>
+    <div class="page-meta">Phase: Hyrox Base</div>
+  </div>
+
+    <div class="daily-orientation-stack">
+      
+  <section class="ruled-area lg primary-vector-area">
+    <div class="section-label">Primary Vector</div>
+    <div class="prompt">What matters most today?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="two-column friction-grid">
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">What might derail today?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">How will I reduce it?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        </div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 007</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 12, 2026 · Tuesday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 008</div>
+  </section>
+
+  <section class="page daily-orientation-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 13, 2026 · Wednesday</div>
+    </div>
+    <div class="page-meta">Phase: Hyrox Base</div>
+  </div>
+
+    <div class="daily-orientation-stack">
+      
+  <section class="ruled-area lg primary-vector-area">
+    <div class="section-label">Primary Vector</div>
+    <div class="prompt">What matters most today?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="two-column friction-grid">
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">What might derail today?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">How will I reduce it?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        </div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 009</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 13, 2026 · Wednesday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 010</div>
+  </section>
+
+  <section class="page daily-orientation-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 14, 2026 · Thursday</div>
+    </div>
+    <div class="page-meta">Phase: Hyrox Base</div>
+  </div>
+
+    <div class="daily-orientation-stack">
+      
+  <section class="ruled-area lg primary-vector-area">
+    <div class="section-label">Primary Vector</div>
+    <div class="prompt">What matters most today?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="two-column friction-grid">
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">What might derail today?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">How will I reduce it?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        </div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 011</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 14, 2026 · Thursday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 012</div>
+  </section>
+
+  <section class="page daily-orientation-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 15, 2026 · Friday</div>
+    </div>
+    <div class="page-meta">Phase: Hyrox Base</div>
+  </div>
+
+    <div class="daily-orientation-stack">
+      
+  <section class="ruled-area lg primary-vector-area">
+    <div class="section-label">Primary Vector</div>
+    <div class="prompt">What matters most today?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="two-column friction-grid">
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">What might derail today?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">How will I reduce it?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        </div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 013</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 15, 2026 · Friday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 014</div>
+  </section>
+
+  <section class="page daily-orientation-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 16, 2026 · Saturday</div>
+    </div>
+    <div class="page-meta">Phase: Hyrox Base</div>
+  </div>
+
+    <div class="daily-orientation-stack">
+      
+  <section class="ruled-area lg primary-vector-area">
+    <div class="section-label">Primary Vector</div>
+    <div class="prompt">What matters most today?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="two-column friction-grid">
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">What might derail today?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">How will I reduce it?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        </div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 015</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 16, 2026 · Saturday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 016</div>
+  </section>
+
+  <section class="page daily-orientation-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 17, 2026 · Sunday</div>
+    </div>
+    <div class="page-meta">Phase: Hyrox Base</div>
+  </div>
+
+    <div class="daily-orientation-stack">
+      
+  <section class="ruled-area lg primary-vector-area">
+    <div class="section-label">Primary Vector</div>
+    <div class="prompt">What matters most today?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+        
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="state-note"></div>
+  </div>
+
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="two-column friction-grid">
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">What might derail today?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+          
+  <section class="ruled-area lg ">
+    <div class="section-label">How will I reduce it?</div>
+    
+    <div class="write-zone"></div>
+  </section>
+
+        </div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 017</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 17, 2026 · Sunday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 018</div>
+  </section>
+
+  <section class="page weekly-review-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">WEEKLY REVIEW</div>
+    </div>
+    <div class="page-meta"><div>Week of</div></div>
+  </div>
+
+    <div class="weekly-review-layout">
+      <div class="review-main-column">
+        
+  <section class="review-prompt">
+    <div class="section-label">What actually mattered this week?</div>
+    <div class="review-write-line"></div>
+  </section>
+
+        
+  <section class="review-prompt">
+    <div class="section-label">What produced disproportionate value?</div>
+    <div class="review-write-line"></div>
+  </section>
+
+        
+  <section class="review-prompt">
+    <div class="section-label">What drained energy without return?</div>
+    <div class="review-write-line"></div>
+  </section>
+
+        
+  <section class="review-prompt">
+    <div class="section-label">Where did I avoid discomfort?</div>
+    <div class="review-write-line"></div>
+  </section>
+
+        
+  <section class="review-prompt">
+    <div class="section-label">What strengthened me?</div>
+    <div class="review-write-line"></div>
+  </section>
+
+        
+  <section class="review-prompt">
+    <div class="section-label">What weakened me?</div>
+    <div class="review-write-line"></div>
+  </section>
+
+      </div>
+      <aside class="review-side-column">
+        <div class="scorecard">
+          <div class="section-label">Weekly Scorecard</div>
+          
+  <div class="score-row">
+    <div>Training</div>
+    <div>/10</div>
+  </div>
+
+          
+  <div class="score-row">
+    <div>Focus</div>
+    <div>/10</div>
+  </div>
+
+          
+  <div class="score-row">
+    <div>Recovery</div>
+    <div>/10</div>
+  </div>
+
+          
+  <div class="score-row">
+    <div>Nutrition</div>
+    <div>/10</div>
+  </div>
+
+          
+  <div class="score-row">
+    <div>Relationships</div>
+    <div>/10</div>
+  </div>
+
+          
+  <div class="score-row">
+    <div>Finances</div>
+    <div>/10</div>
+  </div>
+
+          
+  <div class="score-row">
+    <div>Growth</div>
+    <div>/10</div>
+  </div>
+
+          
+  <div class="score-row">
+    <div>Overall</div>
+    <div>/10</div>
+  </div>
+
+        </div>
+        
+  <section class="ruled-area lg next-vector-area">
+    <div class="section-label">Next Week: Primary Vector</div>
+    <div class="prompt">What will be most important?</div>
+    <div class="write-zone"></div>
+  </section>
+
+      </aside>
+    </div>
+    <div class="footer">VECTOR / REVIEW / 019</div>
+  </section>
+
+  <section class="page notes-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">NOTE PAGES</div>
+    </div>
+    <div class="page-meta"></div>
+  </div>
+
+    <div class="full-note-grid dot-grid-surface"></div>
+    <div class="footer">VECTOR / NOTES / 020</div>
+  </section>
+
+  <section class="page notes-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">NOTE PAGES</div>
+    </div>
+    <div class="page-meta"></div>
+  </div>
+
+    <div class="full-note-grid dot-grid-surface"></div>
+    <div class="footer">VECTOR / NOTES / 021</div>
+  </section>
+</main>
+  </body>
+</html>
