@@ -263,26 +263,69 @@ body {
   padding-bottom: 15mm;
 }
 
+.compass-subtitle {
+  color: var(--muted);
+  font-size: 8pt;
+  letter-spacing: .04em;
+  margin-top: -2mm;
+  margin-bottom: 5mm;
+}
+
 .compass-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "theme north"
-    "outcomes outcomes"
-    "focus standards"
-    "constraints risks";
-  grid-template-rows: 33mm 49mm 38mm 32mm;
-  column-gap: 5mm;
-  row-gap: 5mm;
+    "theme outcomes"
+    "focus north";
+  grid-template-rows: 1fr 1fr;
+  column-gap: 0;
+  row-gap: 0;
+  flex: 1;
+  border-top: .25mm solid var(--rule);
+  border-bottom: .25mm solid var(--rule);
+  position: relative;
 }
 
-.compass-theme { grid-area: theme; }
-.compass-north-star { grid-area: north; }
-.compass-outcomes { grid-area: outcomes; }
-.compass-focus { grid-area: focus; }
-.compass-standards { grid-area: standards; }
-.compass-constraints { grid-area: constraints; }
-.compass-risks { grid-area: risks; }
+.compass-grid::before {
+  background: var(--rule-light);
+  bottom: 0;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: 0;
+  width: .25mm;
+}
+
+.open-area {
+  padding: 5mm 4mm 4mm 0;
+}
+
+.open-area-space {
+  min-height: 22mm;
+}
+
+.compass-theme {
+  border-bottom: .25mm solid var(--rule-light);
+  grid-area: theme;
+}
+
+.compass-outcomes {
+  grid-area: outcomes;
+  padding-left: 5mm;
+}
+
+.compass-focus {
+  grid-area: focus;
+}
+
+.compass-north-star {
+  border: .35mm solid var(--rule);
+  grid-area: north;
+  align-self: start;
+  height: calc(100% - 5mm);
+  margin: 0 0 4mm 5mm;
+  padding: 3mm;
+}
 
 .compass-grid .ruled-area,
 .weekly-planning-stack .ruled-area,
@@ -304,12 +347,66 @@ body {
 
 .weekly-planning-stack {
   display: grid;
-  grid-template-rows: 25mm 34mm 43mm 26mm 26mm;
-  gap: 4mm;
+  flex: 1;
+  grid-template-rows: 32mm 1fr 44mm;
+  gap: 5mm;
 }
 
-.weekly-support-grid {
-  grid-template-rows: 1fr 1fr;
+.weekly-primary,
+.weekly-mission,
+.weekly-support-panel,
+.weekly-close-item {
+  border-top: .25mm solid var(--rule);
+  padding-top: 3mm;
+}
+
+.weekly-primary {
+  border-top: 0;
+}
+
+.weekly-main-grid,
+.weekly-close-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5mm;
+  min-height: 0;
+}
+
+.weekly-mission {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.weekly-mission-rows {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  margin-top: 5mm;
+}
+
+.weekly-mission-rows div {
+  color: var(--muted);
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.weekly-support-panel {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  padding-top: 0;
+}
+
+.weekly-support-item {
+  border-top: .25mm solid var(--rule);
+  padding-top: 3mm;
+}
+
+.weekly-support-item:first-child {
+  border-top: 0;
+}
+
+.weekly-close-item {
+  min-height: 0;
 }
 
 /* Daily orientation */
@@ -324,11 +421,21 @@ body {
   flex: 1;
 }
 
+.primary-vector-area,
 .mission-critical,
 .physical-state-section,
 .friction-scan {
   border-top: .25mm solid var(--rule);
   padding-top: 2.5mm;
+}
+
+.primary-vector-area {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.open-write-zone {
+  min-height: 23mm;
 }
 
 .mission-row {
@@ -337,7 +444,6 @@ body {
   align-items: end;
   gap: 3mm;
   min-height: 8mm;
-  border-bottom: .25mm solid var(--rule-light);
   color: var(--muted);
   font-size: 7pt;
   font-weight: 700;
@@ -350,16 +456,27 @@ body {
 
 .physical-state-section {
   display: grid;
-  grid-template-rows: auto repeat(4, 1fr);
+  grid-template-rows: auto 1fr;
+  gap: 2mm;
+}
+
+.physical-state-grid {
+  display: grid;
+  grid-template-columns: 63mm 1fr;
+  min-height: 22mm;
+}
+
+.state-rows {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
   gap: 1.6mm;
 }
 
 .state-row {
   display: grid;
-  grid-template-columns: 31mm 28mm 1fr;
+  grid-template-columns: 31mm 28mm;
   align-items: center;
   column-gap: 4mm;
-  border-bottom: .25mm solid var(--rule-light);
   font-size: 6.8pt;
   letter-spacing: .08em;
   min-height: 5.5mm;
@@ -378,9 +495,17 @@ body {
   border-radius: 50%;
 }
 
-.state-note {
-  border-bottom: .2mm solid var(--rule-light);
-  height: 4mm;
+.physical-state-notes {
+  border-left: .25mm solid var(--rule-light);
+  padding-left: 3mm;
+}
+
+.physical-state-notes-label {
+  color: var(--muted);
+  font-size: 6.2pt;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 .friction-scan {
@@ -388,13 +513,14 @@ body {
   flex-direction: column;
 }
 
-.friction-grid {
-  flex: 1;
-  margin-top: 3mm;
+.friction-scan .prompt {
+  margin-top: 2mm;
 }
 
-.friction-grid .ruled-area {
-  height: 100%;
+.friction-write-zone {
+  flex: 1;
+  min-height: 16mm;
+  border-bottom: .25mm solid var(--rule-light);
 }
 
 /* Daily execution */
@@ -409,6 +535,7 @@ body {
 }
 
 .training-log-section {
+  border-top: 0;
   min-height: 68mm;
 }
 
@@ -419,8 +546,6 @@ body {
   align-items: stretch;
   min-height: 51mm;
   margin-top: 2mm;
-  border-top: .25mm solid var(--rule);
-  border-bottom: .25mm solid var(--rule);
 }
 
 .training-writing {
@@ -433,7 +558,6 @@ body {
   align-self: stretch;
   background: var(--bg);
   border-left: .25mm solid var(--rule);
-  border-right: .25mm solid var(--rule);
 }
 
 .stat-row {
@@ -499,15 +623,18 @@ body {
 
 .calibration-line {
   display: grid;
-  grid-template-columns: 38mm 1fr;
+  grid-template-columns: 52mm 1fr;
   align-items: end;
   column-gap: 4mm;
   min-height: 8.5mm;
-  border-bottom: .25mm solid var(--rule-light);
   font-size: 6.6pt;
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
+}
+
+.calibration-line div:first-child {
+  white-space: nowrap;
 }
 
 /* Weekly review */
@@ -515,50 +642,93 @@ body {
   padding-bottom: 15mm;
 }
 
-.weekly-review-layout {
+.weekly-review-header {
   display: grid;
   grid-template-columns: 1fr 42mm;
   gap: 6mm;
+  align-items: start;
+  border-bottom: .35mm solid var(--rule);
+  padding-bottom: 4mm;
+  margin-bottom: 0;
+}
+
+.weekly-review-title {
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: .12em;
+  font-weight: 500;
+}
+
+.weekly-review-subtitle {
+  color: var(--muted);
+  font-size: 6.6pt;
+  line-height: 1.35;
+  margin-top: 2mm;
+}
+
+.weekly-review-week {
+  color: var(--muted);
+  font-size: 7pt;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.weekly-review-layout {
+  display: grid;
+  grid-template-columns: 1fr 42mm;
+  column-gap: 6mm;
   flex: 1;
 }
 
 .review-main-column {
   display: grid;
   grid-template-rows: repeat(6, 1fr);
-  gap: 3mm;
 }
 
 .review-prompt {
-  border-top: .25mm solid var(--rule);
-  padding-top: 2.5mm;
+  display: grid;
+  grid-template-columns: 34mm 1fr;
+  gap: 5mm;
+  border-bottom: .25mm solid var(--rule);
+  padding: 4mm 0 3mm;
+}
+
+.review-prompt-label {
+  font-size: 5.8pt;
+  font-weight: 700;
+  letter-spacing: .11em;
+  line-height: 1.35;
+  text-transform: uppercase;
 }
 
 .review-write-line {
-  height: calc(100% - 7mm);
-  min-height: 13mm;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 7.8mm,
-    var(--rule-light) 8mm
-  );
+  min-height: 16mm;
 }
 
 .review-side-column {
   border-left: .25mm solid var(--rule-light);
+  display: flex;
+  flex-direction: column;
   padding-left: 5mm;
 }
 
 .scorecard {
-  border-top: .25mm solid var(--rule);
-  padding-top: 2.5mm;
+  padding-top: 4mm;
+}
+
+.scorecard-note {
+  color: var(--muted);
+  font-size: 6.2pt;
+  line-height: 1.35;
+  margin-top: 1.2mm;
+  margin-bottom: 3mm;
 }
 
 .score-row {
   display: grid;
   grid-template-columns: 1fr 10mm;
   align-items: center;
-  min-height: 8mm;
+  min-height: 7.5mm;
   border-bottom: .25mm solid var(--rule-light);
   font-size: 6.8pt;
   letter-spacing: .08em;
@@ -571,7 +741,8 @@ body {
 }
 
 .next-vector-area {
-  margin-top: 9mm;
+  margin-top: auto;
+  padding-top: 4mm;
 }
 
 /* Notes */
@@ -579,9 +750,28 @@ body {
   padding-bottom: 15mm;
 }
 
+.notes-header {
+  border-bottom: .35mm solid var(--rule);
+  margin-bottom: 4mm;
+  padding-bottom: 3mm;
+}
+
+.notes-title {
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: .12em;
+  font-weight: 500;
+}
+
+.notes-instruction {
+  color: var(--muted);
+  font-size: 6.4pt;
+  line-height: 1.35;
+  margin-top: 3mm;
+}
+
 .full-note-grid {
   flex: 1;
-  border-top: .25mm solid var(--rule);
 }
 
 @page { size: A5 portrait; margin: 0; }
@@ -668,7 +858,7 @@ body {
             <div class="method-number">05</div>
             <div>
               <div class="method-label">Calibrate</div>
-              <div class="method-copy">Close the loop without drama.</div>
+              <div class="method-copy">Close the loop.</div>
             </div>
             <div></div>
           </div>
@@ -693,54 +883,34 @@ body {
     <div class="page-meta"><div>Quarter / Date Range</div><div>Phase</div></div>
   </div>
 
+    <div class="compass-subtitle">Big picture. Clear direction.</div>
     <div class="compass-grid">
       
-  <section class="ruled-area lg compass-theme">
+  <section class="open-area compass-theme">
     <div class="section-label">Theme</div>
     <div class="prompt">What is the operating theme for this quarter?</div>
-    <div class="write-zone"></div>
+    <div class="open-area-space"></div>
   </section>
 
       
-  <section class="ruled-area lg compass-north-star">
-    <div class="section-label">North Star</div>
-    <div class="prompt">The why behind it all.</div>
-    <div class="write-zone"></div>
-  </section>
-
-      
-  <section class="ruled-area xl compass-outcomes">
+  <section class="open-area compass-outcomes">
     <div class="section-label">Outcomes</div>
     <div class="prompt">What will success look like?</div>
-    <div class="write-zone"></div>
+    <div class="open-area-space"></div>
   </section>
 
       
-  <section class="ruled-area lg compass-focus">
+  <section class="open-area compass-focus">
     <div class="section-label">Focus Areas</div>
     <div class="prompt">Where will attention concentrate?</div>
-    <div class="write-zone"></div>
+    <div class="open-area-space"></div>
   </section>
 
       
-  <section class="ruled-area lg compass-standards">
-    <div class="section-label">Standards</div>
-    <div class="prompt">What must remain true?</div>
-    <div class="write-zone"></div>
-  </section>
-
-      
-  <section class="ruled-area md compass-constraints">
-    <div class="section-label">Constraints</div>
-    <div class="prompt">Known limits and non-negotiables.</div>
-    <div class="write-zone"></div>
-  </section>
-
-      
-  <section class="ruled-area md compass-risks">
-    <div class="section-label">Risks / Friction</div>
-    <div class="prompt">What could slow or derail execution?</div>
-    <div class="write-zone"></div>
+  <section class="open-area compass-north-star">
+    <div class="section-label">North Star</div>
+    <div class="prompt">The why behind it all.</div>
+    <div class="open-area-space"></div>
   </section>
 
     </div>
@@ -758,64 +928,45 @@ body {
   </div>
 
     <div class="weekly-planning-stack">
-      
-  <section class="ruled-area md ">
-    <div class="section-label">Primary Vector</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-      
-  <section class="ruled-area lg ">
-    <div class="section-label">Mission Critical This Week</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-      <div class="two-column weekly-support-grid">
-        
-  <section class="ruled-area sm ">
-    <div class="section-label">Training Targets</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        
-  <section class="ruled-area sm ">
-    <div class="section-label">Recovery / Sleep Target</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        
-  <section class="ruled-area sm ">
-    <div class="section-label">Relationship / Family Anchor</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        
-  <section class="ruled-area sm ">
-    <div class="section-label">Work / Build Focus</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="weekly-primary">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What must the week move toward?</div>
+      </section>
+      <div class="weekly-main-grid">
+        <section class="weekly-mission">
+          <div class="section-label">Mission Critical This Week</div>
+          <div class="prompt">1-3 outcomes that move the needle.</div>
+          <div class="weekly-mission-rows">
+            <div><span>01</span></div>
+            <div><span>02</span></div>
+            <div><span>03</span></div>
+          </div>
+        </section>
+        <section class="weekly-support-panel">
+          <div class="weekly-support-item">
+            <div class="section-label">Training Targets</div>
+          </div>
+          <div class="weekly-support-item">
+            <div class="section-label">Recovery / Sleep Target</div>
+          </div>
+          <div class="weekly-support-item">
+            <div class="section-label">Relationship / Family Anchor</div>
+          </div>
+          <div class="weekly-support-item">
+            <div class="section-label">Work / Build Focus</div>
+          </div>
+        </section>
       </div>
-      
-  <section class="ruled-area md ">
-    <div class="section-label">Known Friction</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-      
-  <section class="ruled-area md ">
-    <div class="section-label">Pre-Commitments</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
+      <div class="weekly-close-grid">
+        <section class="weekly-close-item">
+          <div class="section-label">Known Friction</div>
+          <div class="prompt">What could slow or derail execution?</div>
+        </section>
+        <section class="weekly-close-item">
+          <div class="section-label">Pre-Commitments</div>
+          <div class="prompt">What will be decided before the week gets noisy?</div>
+        </section>
+      </div>
     </div>
     <div class="footer">VECTOR / WEEKLY / 004</div>
   </section>
@@ -825,19 +976,17 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 11, 2026 · Monday</div>
+      <div class="page-heading">May 14, 2026 · Thursday</div>
     </div>
     <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
     <div class="daily-orientation-stack">
-      
-  <section class="ruled-area lg primary-vector-area">
-    <div class="section-label">Primary Vector</div>
-    <div class="prompt">What matters most today?</div>
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         <div class="section-label">Mission Critical</div>
         <div class="prompt">1-3 things that move the needle.</div>
@@ -862,53 +1011,44 @@ body {
       </section>
       <section class="physical-state-section">
         <div class="section-label">Physical State</div>
-        
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
   <div class="state-row">
     <div>Sleep</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Energy</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Recovery</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Training Readiness</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         <div class="section-label">Friction Scan</div>
-        <div class="two-column friction-grid">
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">What might derail today?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">How will I reduce it?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        </div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     <div class="footer">VECTOR / DAILY / 005</div>
@@ -919,7 +1059,7 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 11, 2026 · Monday</div>
+      <div class="page-heading">May 14, 2026 · Thursday</div>
     </div>
     <div class="page-meta">Execution & Calibration</div>
   </div>
@@ -1006,19 +1146,17 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 12, 2026 · Tuesday</div>
+      <div class="page-heading">May 15, 2026 · Friday</div>
     </div>
     <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
     <div class="daily-orientation-stack">
-      
-  <section class="ruled-area lg primary-vector-area">
-    <div class="section-label">Primary Vector</div>
-    <div class="prompt">What matters most today?</div>
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         <div class="section-label">Mission Critical</div>
         <div class="prompt">1-3 things that move the needle.</div>
@@ -1043,53 +1181,44 @@ body {
       </section>
       <section class="physical-state-section">
         <div class="section-label">Physical State</div>
-        
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
   <div class="state-row">
     <div>Sleep</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Energy</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Recovery</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Training Readiness</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         <div class="section-label">Friction Scan</div>
-        <div class="two-column friction-grid">
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">What might derail today?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">How will I reduce it?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        </div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     <div class="footer">VECTOR / DAILY / 007</div>
@@ -1100,7 +1229,7 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 12, 2026 · Tuesday</div>
+      <div class="page-heading">May 15, 2026 · Friday</div>
     </div>
     <div class="page-meta">Execution & Calibration</div>
   </div>
@@ -1187,19 +1316,17 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 13, 2026 · Wednesday</div>
+      <div class="page-heading">May 16, 2026 · Saturday</div>
     </div>
     <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
     <div class="daily-orientation-stack">
-      
-  <section class="ruled-area lg primary-vector-area">
-    <div class="section-label">Primary Vector</div>
-    <div class="prompt">What matters most today?</div>
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         <div class="section-label">Mission Critical</div>
         <div class="prompt">1-3 things that move the needle.</div>
@@ -1224,53 +1351,44 @@ body {
       </section>
       <section class="physical-state-section">
         <div class="section-label">Physical State</div>
-        
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
   <div class="state-row">
     <div>Sleep</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Energy</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Recovery</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Training Readiness</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         <div class="section-label">Friction Scan</div>
-        <div class="two-column friction-grid">
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">What might derail today?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">How will I reduce it?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        </div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     <div class="footer">VECTOR / DAILY / 009</div>
@@ -1281,7 +1399,7 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 13, 2026 · Wednesday</div>
+      <div class="page-heading">May 16, 2026 · Saturday</div>
     </div>
     <div class="page-meta">Execution & Calibration</div>
   </div>
@@ -1368,19 +1486,17 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 14, 2026 · Thursday</div>
+      <div class="page-heading">May 17, 2026 · Sunday</div>
     </div>
     <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
     <div class="daily-orientation-stack">
-      
-  <section class="ruled-area lg primary-vector-area">
-    <div class="section-label">Primary Vector</div>
-    <div class="prompt">What matters most today?</div>
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         <div class="section-label">Mission Critical</div>
         <div class="prompt">1-3 things that move the needle.</div>
@@ -1405,53 +1521,44 @@ body {
       </section>
       <section class="physical-state-section">
         <div class="section-label">Physical State</div>
-        
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
   <div class="state-row">
     <div>Sleep</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Energy</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Recovery</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Training Readiness</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         <div class="section-label">Friction Scan</div>
-        <div class="two-column friction-grid">
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">What might derail today?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">How will I reduce it?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        </div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     <div class="footer">VECTOR / DAILY / 011</div>
@@ -1462,7 +1569,7 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 14, 2026 · Thursday</div>
+      <div class="page-heading">May 17, 2026 · Sunday</div>
     </div>
     <div class="page-meta">Execution & Calibration</div>
   </div>
@@ -1549,19 +1656,17 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 15, 2026 · Friday</div>
+      <div class="page-heading">May 18, 2026 · Monday</div>
     </div>
     <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
     <div class="daily-orientation-stack">
-      
-  <section class="ruled-area lg primary-vector-area">
-    <div class="section-label">Primary Vector</div>
-    <div class="prompt">What matters most today?</div>
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         <div class="section-label">Mission Critical</div>
         <div class="prompt">1-3 things that move the needle.</div>
@@ -1586,53 +1691,44 @@ body {
       </section>
       <section class="physical-state-section">
         <div class="section-label">Physical State</div>
-        
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
   <div class="state-row">
     <div>Sleep</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Energy</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Recovery</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Training Readiness</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         <div class="section-label">Friction Scan</div>
-        <div class="two-column friction-grid">
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">What might derail today?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">How will I reduce it?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        </div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     <div class="footer">VECTOR / DAILY / 013</div>
@@ -1643,7 +1739,7 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 15, 2026 · Friday</div>
+      <div class="page-heading">May 18, 2026 · Monday</div>
     </div>
     <div class="page-meta">Execution & Calibration</div>
   </div>
@@ -1730,19 +1826,17 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 16, 2026 · Saturday</div>
+      <div class="page-heading">May 19, 2026 · Tuesday</div>
     </div>
     <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
     <div class="daily-orientation-stack">
-      
-  <section class="ruled-area lg primary-vector-area">
-    <div class="section-label">Primary Vector</div>
-    <div class="prompt">What matters most today?</div>
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         <div class="section-label">Mission Critical</div>
         <div class="prompt">1-3 things that move the needle.</div>
@@ -1767,53 +1861,44 @@ body {
       </section>
       <section class="physical-state-section">
         <div class="section-label">Physical State</div>
-        
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
   <div class="state-row">
     <div>Sleep</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Energy</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Recovery</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Training Readiness</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         <div class="section-label">Friction Scan</div>
-        <div class="two-column friction-grid">
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">What might derail today?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">How will I reduce it?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        </div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     <div class="footer">VECTOR / DAILY / 015</div>
@@ -1824,7 +1909,7 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 16, 2026 · Saturday</div>
+      <div class="page-heading">May 19, 2026 · Tuesday</div>
     </div>
     <div class="page-meta">Execution & Calibration</div>
   </div>
@@ -1911,19 +1996,17 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 17, 2026 · Sunday</div>
+      <div class="page-heading">May 20, 2026 · Wednesday</div>
     </div>
     <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
     <div class="daily-orientation-stack">
-      
-  <section class="ruled-area lg primary-vector-area">
-    <div class="section-label">Primary Vector</div>
-    <div class="prompt">What matters most today?</div>
-    <div class="write-zone"></div>
-  </section>
-
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         <div class="section-label">Mission Critical</div>
         <div class="prompt">1-3 things that move the needle.</div>
@@ -1948,53 +2031,44 @@ body {
       </section>
       <section class="physical-state-section">
         <div class="section-label">Physical State</div>
-        
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
   <div class="state-row">
     <div>Sleep</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Energy</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Recovery</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
-        
+            
   <div class="state-row">
     <div>Training Readiness</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         <div class="section-label">Friction Scan</div>
-        <div class="two-column friction-grid">
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">What might derail today?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-          
-  <section class="ruled-area lg ">
-    <div class="section-label">How will I reduce it?</div>
-    
-    <div class="write-zone"></div>
-  </section>
-
-        </div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     <div class="footer">VECTOR / DAILY / 017</div>
@@ -2005,7 +2079,7 @@ body {
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">May 17, 2026 · Sunday</div>
+      <div class="page-heading">May 20, 2026 · Wednesday</div>
     </div>
     <div class="page-meta">Execution & Calibration</div>
   </div>
@@ -2087,51 +2161,221 @@ body {
     <div class="footer">VECTOR / DAILY / 018</div>
   </section>
 
-  <section class="page weekly-review-page">
+  <section class="page daily-orientation-page">
     
   <div class="page-header">
     <div>
       <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">WEEKLY REVIEW</div>
+      <div class="page-heading">May 21, 2026 · Thursday</div>
     </div>
-    <div class="page-meta"><div>Week of</div></div>
+    <div class="page-meta">Phase: Hyrox Base</div>
   </div>
 
+    <div class="daily-orientation-stack">
+      <section class="primary-vector-area">
+        <div class="section-label">Primary Vector</div>
+        <div class="prompt">What matters most today?</div>
+        <div class="open-write-zone"></div>
+      </section>
+      <section class="mission-critical">
+        <div class="section-label">Mission Critical</div>
+        <div class="prompt">1-3 things that move the needle.</div>
+        
+  <div class="mission-row">
+    <div>01</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>02</div>
+    <div></div>
+  </div>
+
+        
+  <div class="mission-row">
+    <div>03</div>
+    <div></div>
+  </div>
+
+      </section>
+      <section class="physical-state-section">
+        <div class="section-label">Physical State</div>
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            
+  <div class="state-row">
+    <div>Sleep</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+            
+  <div class="state-row">
+    <div>Energy</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+            
+  <div class="state-row">
+    <div>Recovery</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+            
+  <div class="state-row">
+    <div>Training Readiness</div>
+    <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
+      </section>
+      <section class="friction-scan">
+        <div class="section-label">Friction Scan</div>
+        <div class="prompt">What might derail today?</div>
+        <div class="friction-write-zone"></div>
+        <div class="prompt">How will I reduce it?</div>
+        <div class="friction-write-zone"></div>
+      </section>
+    </div>
+    <div class="footer">VECTOR / DAILY / 019</div>
+  </section>
+
+  <section class="page right daily-execution-page">
+    
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">VECTOR</div>
+      <div class="page-heading">May 21, 2026 · Thursday</div>
+    </div>
+    <div class="page-meta">Execution & Calibration</div>
+  </div>
+
+    <section class="training-log-section">
+      <div class="section-label">Training / Movement</div>
+      <div class="prompt">Log it.</div>
+      <div class="training-layout">
+        <div class="training-writing dot-grid-surface"></div>
+        <div class="stat-panel">
+          
+  <div class="stat-row">
+    <div>Time</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>RPE</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>HR Avg</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Cal</div>
+    <div></div>
+  </div>
+
+          
+  <div class="stat-row">
+    <div>Notes</div>
+    <div></div>
+  </div>
+
+        </div>
+      </div>
+    </section>
+    
+  <section class="dot-grid-area lg daily-notes-area">
+    <div class="section-label">Notes / Observations</div>
+    <div class="prompt">Capture thoughts, ideas, conversations.</div>
+    <div class="write-zone"></div>
+  </section>
+
+    <section class="evening-calibration">
+      <div class="section-label">Evening Calibration</div>
+      <div class="prompt">Close the loop.</div>
+      <div class="calibration-choice-row">
+        <div>Did I move forward?</div>
+        <div><span></span> Yes</div>
+        <div><span></span> Neutral</div>
+        <div><span></span> Drifted</div>
+      </div>
+      
+  <div class="calibration-line">
+    <div>What created momentum?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>What created friction?</div>
+    <div></div>
+  </div>
+
+      
+  <div class="calibration-line">
+    <div>One adjustment for tomorrow</div>
+    <div></div>
+  </div>
+
+    </section>
+    <div class="footer">VECTOR / DAILY / 020</div>
+  </section>
+
+  <section class="page weekly-review-page">
+    <div class="weekly-review-header">
+      <div>
+        <div class="weekly-review-title">WEEKLY REVIEW</div>
+        <div class="weekly-review-subtitle">Look back. Get clear. Adjust.</div>
+      </div>
+      <div class="weekly-review-week">
+        <div>Week of</div>
+      </div>
+    </div>
     <div class="weekly-review-layout">
       <div class="review-main-column">
         
   <section class="review-prompt">
-    <div class="section-label">What actually mattered this week?</div>
+    <div class="review-prompt-label">What actually mattered this week?</div>
     <div class="review-write-line"></div>
   </section>
 
         
   <section class="review-prompt">
-    <div class="section-label">What produced disproportionate value?</div>
+    <div class="review-prompt-label">What produced disproportionate value?</div>
     <div class="review-write-line"></div>
   </section>
 
         
   <section class="review-prompt">
-    <div class="section-label">What drained energy without return?</div>
+    <div class="review-prompt-label">What drained energy without return?</div>
     <div class="review-write-line"></div>
   </section>
 
         
   <section class="review-prompt">
-    <div class="section-label">Where did I avoid discomfort?</div>
+    <div class="review-prompt-label">Where did I avoid discomfort?</div>
     <div class="review-write-line"></div>
   </section>
 
         
   <section class="review-prompt">
-    <div class="section-label">What strengthened me?</div>
+    <div class="review-prompt-label">What strengthened me?</div>
     <div class="review-write-line"></div>
   </section>
 
         
   <section class="review-prompt">
-    <div class="section-label">What weakened me?</div>
+    <div class="review-prompt-label">What weakened me?</div>
     <div class="review-write-line"></div>
   </section>
 
@@ -2139,6 +2383,7 @@ body {
       <aside class="review-side-column">
         <div class="scorecard">
           <div class="section-label">Weekly Scorecard</div>
+          <div class="scorecard-note">Not about perfection.</div>
           
   <div class="score-row">
     <div>Training</div>
@@ -2197,35 +2442,25 @@ body {
 
       </aside>
     </div>
-    <div class="footer">VECTOR / REVIEW / 019</div>
+    <div class="footer">VECTOR / REVIEW / 021</div>
   </section>
 
   <section class="page notes-page">
-    
-  <div class="page-header">
-    <div>
-      <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">NOTE PAGES</div>
+    <div class="notes-header">
+      <div class="notes-title">NOTE PAGES</div>
+      <div class="notes-instruction">Use for anything that matters.</div>
     </div>
-    <div class="page-meta"></div>
-  </div>
-
     <div class="full-note-grid dot-grid-surface"></div>
-    <div class="footer">VECTOR / NOTES / 020</div>
+    <div class="footer">VECTOR / NOTES / 022</div>
   </section>
 
   <section class="page notes-page">
-    
-  <div class="page-header">
-    <div>
-      <div class="eyebrow">VECTOR</div>
-      <div class="page-heading">NOTE PAGES</div>
+    <div class="notes-header">
+      <div class="notes-title">NOTE PAGES</div>
+      <div class="notes-instruction">Use for anything that matters.</div>
     </div>
-    <div class="page-meta"></div>
-  </div>
-
     <div class="full-note-grid dot-grid-surface"></div>
-    <div class="footer">VECTOR / NOTES / 021</div>
+    <div class="footer">VECTOR / NOTES / 023</div>
   </section>
 </main>
   </body>

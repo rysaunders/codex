@@ -58,6 +58,14 @@ const ruledArea = ({ label, prompt = '', size = 'md', className = '' }) => `
   </section>
 `;
 
+const openArea = ({ label, prompt = '', className = '' }) => `
+  <section class="open-area ${escapeHtml(className)}">
+    ${sectionLabel(label)}
+    ${prompt ? promptText(prompt) : ''}
+    <div class="open-area-space"></div>
+  </section>
+`;
+
 const dotGridArea = ({ label, prompt = '', size = 'md', className = '' }) => `
   <section class="dot-grid-area ${escapeHtml(size)} ${escapeHtml(className)}">
     ${sectionLabel(label)}
@@ -84,7 +92,7 @@ const buildMethodPage = () => {
     ['02', 'Select', 'Choose only what can move the needle.'],
     ['03', 'Reduce Friction', 'Remove the obvious failure point before it wins.'],
     ['04', 'Execute', 'Train, work, connect, recover.'],
-    ['05', 'Calibrate', 'Close the loop without drama.'],
+    ['05', 'Calibrate', 'Close the loop.'],
   ];
 
   return `
@@ -117,14 +125,12 @@ const buildMethodPage = () => {
 const buildCompassPage = () => `
   <section class="page compass-page">
     ${pageHeader('QUARTERLY COMPASS', '<div>Quarter / Date Range</div><div>Phase</div>')}
+    <div class="compass-subtitle">Big picture. Clear direction.</div>
     <div class="compass-grid">
-      ${ruledArea({ label: 'Theme', prompt: 'What is the operating theme for this quarter?', size: 'lg', className: 'compass-theme' })}
-      ${ruledArea({ label: 'North Star', prompt: 'The why behind it all.', size: 'lg', className: 'compass-north-star' })}
-      ${ruledArea({ label: 'Outcomes', prompt: 'What will success look like?', size: 'xl', className: 'compass-outcomes' })}
-      ${ruledArea({ label: 'Focus Areas', prompt: 'Where will attention concentrate?', size: 'lg', className: 'compass-focus' })}
-      ${ruledArea({ label: 'Standards', prompt: 'What must remain true?', size: 'lg', className: 'compass-standards' })}
-      ${ruledArea({ label: 'Constraints', prompt: 'Known limits and non-negotiables.', size: 'md', className: 'compass-constraints' })}
-      ${ruledArea({ label: 'Risks / Friction', prompt: 'What could slow or derail execution?', size: 'md', className: 'compass-risks' })}
+      ${openArea({ label: 'Theme', prompt: 'What is the operating theme for this quarter?', className: 'compass-theme' })}
+      ${openArea({ label: 'Outcomes', prompt: 'What will success look like?', className: 'compass-outcomes' })}
+      ${openArea({ label: 'Focus Areas', prompt: 'Where will attention concentrate?', className: 'compass-focus' })}
+      ${openArea({ label: 'North Star', prompt: 'The why behind it all.', className: 'compass-north-star' })}
     </div>
     ${footer('COMPASS')}
   </section>
@@ -134,16 +140,45 @@ const buildWeeklyPage = () => `
   <section class="page weekly-page">
     ${pageHeader('WEEKLY PLANNING', `<div>Week of</div><div>${phaseText()}</div>`)}
     <div class="weekly-planning-stack">
-      ${ruledArea({ label: 'Primary Vector', size: 'md' })}
-      ${ruledArea({ label: 'Mission Critical This Week', size: 'lg' })}
-      <div class="two-column weekly-support-grid">
-        ${ruledArea({ label: 'Training Targets', size: 'sm' })}
-        ${ruledArea({ label: 'Recovery / Sleep Target', size: 'sm' })}
-        ${ruledArea({ label: 'Relationship / Family Anchor', size: 'sm' })}
-        ${ruledArea({ label: 'Work / Build Focus', size: 'sm' })}
+      <section class="weekly-primary">
+        ${sectionLabel('Primary Vector')}
+        ${promptText('What must the week move toward?')}
+      </section>
+      <div class="weekly-main-grid">
+        <section class="weekly-mission">
+          ${sectionLabel('Mission Critical This Week')}
+          ${promptText('1-3 outcomes that move the needle.')}
+          <div class="weekly-mission-rows">
+            <div><span>01</span></div>
+            <div><span>02</span></div>
+            <div><span>03</span></div>
+          </div>
+        </section>
+        <section class="weekly-support-panel">
+          <div class="weekly-support-item">
+            ${sectionLabel('Training Targets')}
+          </div>
+          <div class="weekly-support-item">
+            ${sectionLabel('Recovery / Sleep Target')}
+          </div>
+          <div class="weekly-support-item">
+            ${sectionLabel('Relationship / Family Anchor')}
+          </div>
+          <div class="weekly-support-item">
+            ${sectionLabel('Work / Build Focus')}
+          </div>
+        </section>
       </div>
-      ${ruledArea({ label: 'Known Friction', size: 'md' })}
-      ${ruledArea({ label: 'Pre-Commitments', size: 'md' })}
+      <div class="weekly-close-grid">
+        <section class="weekly-close-item">
+          ${sectionLabel('Known Friction')}
+          ${promptText('What could slow or derail execution?')}
+        </section>
+        <section class="weekly-close-item">
+          ${sectionLabel('Pre-Commitments')}
+          ${promptText('What will be decided before the week gets noisy?')}
+        </section>
+      </div>
     </div>
     ${footer('WEEKLY')}
   </section>
@@ -153,7 +188,6 @@ const ratingRow = (label) => `
   <div class="state-row">
     <div>${escapeHtml(label)}</div>
     <div class="state-dots"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="state-note"></div>
   </div>
 `;
 
@@ -168,7 +202,11 @@ const buildDailyPlanPage = (date) => `
   <section class="page daily-orientation-page">
     ${pageHeader(`${formatDate(date)} · ${formatDayName(date)}`, phaseText())}
     <div class="daily-orientation-stack">
-      ${ruledArea({ label: 'Primary Vector', prompt: 'What matters most today?', size: 'lg', className: 'primary-vector-area' })}
+      <section class="primary-vector-area">
+        ${sectionLabel('Primary Vector')}
+        ${promptText('What matters most today?')}
+        <div class="open-write-zone"></div>
+      </section>
       <section class="mission-critical">
         ${sectionLabel('Mission Critical')}
         ${promptText('1-3 things that move the needle.')}
@@ -178,17 +216,24 @@ const buildDailyPlanPage = (date) => `
       </section>
       <section class="physical-state-section">
         ${sectionLabel('Physical State')}
-        ${ratingRow('Sleep')}
-        ${ratingRow('Energy')}
-        ${ratingRow('Recovery')}
-        ${ratingRow('Training Readiness')}
+        <div class="physical-state-grid">
+          <div class="state-rows">
+            ${ratingRow('Sleep')}
+            ${ratingRow('Energy')}
+            ${ratingRow('Recovery')}
+            ${ratingRow('Training Readiness')}
+          </div>
+          <div class="physical-state-notes">
+            <div class="physical-state-notes-label">Notes</div>
+          </div>
+        </div>
       </section>
       <section class="friction-scan">
         ${sectionLabel('Friction Scan')}
-        <div class="two-column friction-grid">
-          ${ruledArea({ label: 'What might derail today?', size: 'lg' })}
-          ${ruledArea({ label: 'How will I reduce it?', size: 'lg' })}
-        </div>
+        ${promptText('What might derail today?')}
+        <div class="friction-write-zone"></div>
+        ${promptText('How will I reduce it?')}
+        <div class="friction-write-zone"></div>
       </section>
     </div>
     ${footer('DAILY')}
@@ -246,7 +291,7 @@ const buildDailyReviewPage = (date) => `
 
 const reviewPrompt = (label) => `
   <section class="review-prompt">
-    ${sectionLabel(label)}
+    <div class="review-prompt-label">${escapeHtml(label)}</div>
     <div class="review-write-line"></div>
   </section>
 `;
@@ -260,7 +305,15 @@ const scoreRow = (label) => `
 
 const buildWeeklyReviewPage = () => `
   <section class="page weekly-review-page">
-    ${pageHeader('WEEKLY REVIEW', '<div>Week of</div>')}
+    <div class="weekly-review-header">
+      <div>
+        <div class="weekly-review-title">WEEKLY REVIEW</div>
+        <div class="weekly-review-subtitle">Look back. Get clear. Adjust.</div>
+      </div>
+      <div class="weekly-review-week">
+        <div>Week of</div>
+      </div>
+    </div>
     <div class="weekly-review-layout">
       <div class="review-main-column">
         ${reviewPrompt('What actually mattered this week?')}
@@ -273,6 +326,7 @@ const buildWeeklyReviewPage = () => `
       <aside class="review-side-column">
         <div class="scorecard">
           ${sectionLabel('Weekly Scorecard')}
+          <div class="scorecard-note">Not about perfection.</div>
           ${scoreRow('Training')}
           ${scoreRow('Focus')}
           ${scoreRow('Recovery')}
@@ -291,7 +345,10 @@ const buildWeeklyReviewPage = () => `
 
 const buildNotesPage = () => `
   <section class="page notes-page">
-    ${pageHeader('NOTE PAGES', '')}
+    <div class="notes-header">
+      <div class="notes-title">NOTE PAGES</div>
+      <div class="notes-instruction">Use for anything that matters.</div>
+    </div>
     <div class="full-note-grid dot-grid-surface"></div>
     ${footer('NOTES')}
   </section>

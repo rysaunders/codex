@@ -37,6 +37,20 @@ The planner should feel like a physical operating manual: spacious, calm, struct
 - Added lightweight output verification with `npm run verify`.
 - Added project-scoped Codex custom agents under `.codex/agents/` for the documented VECTOR roles.
 - Adjusted the Daily Execution Training / Movement stat panel so it lives inside the section between continuous horizontal dividers.
+- Refined notes pages with the `Use for anything that matters.` instruction and a single clean divider before the dot grid.
+- Refined Weekly Review with the `Look back. Get clear. Adjust.` subtitle and a more cohesive two-column divider system.
+- Refined Daily Orientation by removing cluttered ruled writing lines, simplifying the top divider, and stacking Friction Scan prompts.
+- Removed extraneous writing lines from Daily Orientation Mission Critical and Physical State rows.
+- Added a subtle freeform note lane to Daily Orientation Physical State using a vertical divider instead of horizontal rules.
+- Converted the Daily Orientation Physical State note lane into a labeled section-level component with a continuous vertical divider.
+- Refined Daily Execution by removing the Training / Movement outer box treatment and calibration writing lines.
+- Kept Evening Calibration prompt labels on a single line for cleaner scanning.
+- Refined Quarterly Compass with `Big picture. Clear direction.`, removed lower risk/standards sections, and boxed North Star at bottom-right.
+- Updated design guidance to prefer open handwriting space over horizontal writing lines and simplified Quarterly Compass dividers.
+- Changed the Quarterly Compass center divider to a full-height container rule instead of a per-section border.
+- Aligned Quarterly Compass North Star with the Focus Areas row and removed the extra Daily Execution top divider.
+- Refined Weekly Planning into a command-brief layout with open writing areas, numbered mission rows, compact support targets, and fewer form-like rules.
+- Aligned Weekly Planning support targets with the Pre-Commitments column for cleaner vertical structure.
 
 ## Near-Term Enhancements
 

@@ -258,26 +258,69 @@ body {
   padding-bottom: 15mm;
 }
 
+.compass-subtitle {
+  color: var(--muted);
+  font-size: 8pt;
+  letter-spacing: .04em;
+  margin-top: -2mm;
+  margin-bottom: 5mm;
+}
+
 .compass-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "theme north"
-    "outcomes outcomes"
-    "focus standards"
-    "constraints risks";
-  grid-template-rows: 33mm 49mm 38mm 32mm;
-  column-gap: 5mm;
-  row-gap: 5mm;
+    "theme outcomes"
+    "focus north";
+  grid-template-rows: 1fr 1fr;
+  column-gap: 0;
+  row-gap: 0;
+  flex: 1;
+  border-top: .25mm solid var(--rule);
+  border-bottom: .25mm solid var(--rule);
+  position: relative;
 }
 
-.compass-theme { grid-area: theme; }
-.compass-north-star { grid-area: north; }
-.compass-outcomes { grid-area: outcomes; }
-.compass-focus { grid-area: focus; }
-.compass-standards { grid-area: standards; }
-.compass-constraints { grid-area: constraints; }
-.compass-risks { grid-area: risks; }
+.compass-grid::before {
+  background: var(--rule-light);
+  bottom: 0;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: 0;
+  width: .25mm;
+}
+
+.open-area {
+  padding: 5mm 4mm 4mm 0;
+}
+
+.open-area-space {
+  min-height: 22mm;
+}
+
+.compass-theme {
+  border-bottom: .25mm solid var(--rule-light);
+  grid-area: theme;
+}
+
+.compass-outcomes {
+  grid-area: outcomes;
+  padding-left: 5mm;
+}
+
+.compass-focus {
+  grid-area: focus;
+}
+
+.compass-north-star {
+  border: .35mm solid var(--rule);
+  grid-area: north;
+  align-self: start;
+  height: calc(100% - 5mm);
+  margin: 0 0 4mm 5mm;
+  padding: 3mm;
+}
 
 .compass-grid .ruled-area,
 .weekly-planning-stack .ruled-area,
@@ -299,12 +342,66 @@ body {
 
 .weekly-planning-stack {
   display: grid;
-  grid-template-rows: 25mm 34mm 43mm 26mm 26mm;
-  gap: 4mm;
+  flex: 1;
+  grid-template-rows: 32mm 1fr 44mm;
+  gap: 5mm;
 }
 
-.weekly-support-grid {
-  grid-template-rows: 1fr 1fr;
+.weekly-primary,
+.weekly-mission,
+.weekly-support-panel,
+.weekly-close-item {
+  border-top: .25mm solid var(--rule);
+  padding-top: 3mm;
+}
+
+.weekly-primary {
+  border-top: 0;
+}
+
+.weekly-main-grid,
+.weekly-close-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5mm;
+  min-height: 0;
+}
+
+.weekly-mission {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.weekly-mission-rows {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  margin-top: 5mm;
+}
+
+.weekly-mission-rows div {
+  color: var(--muted);
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.weekly-support-panel {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  padding-top: 0;
+}
+
+.weekly-support-item {
+  border-top: .25mm solid var(--rule);
+  padding-top: 3mm;
+}
+
+.weekly-support-item:first-child {
+  border-top: 0;
+}
+
+.weekly-close-item {
+  min-height: 0;
 }
 
 /* Daily orientation */
@@ -319,11 +416,21 @@ body {
   flex: 1;
 }
 
+.primary-vector-area,
 .mission-critical,
 .physical-state-section,
 .friction-scan {
   border-top: .25mm solid var(--rule);
   padding-top: 2.5mm;
+}
+
+.primary-vector-area {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.open-write-zone {
+  min-height: 23mm;
 }
 
 .mission-row {
@@ -332,7 +439,6 @@ body {
   align-items: end;
   gap: 3mm;
   min-height: 8mm;
-  border-bottom: .25mm solid var(--rule-light);
   color: var(--muted);
   font-size: 7pt;
   font-weight: 700;
@@ -345,16 +451,27 @@ body {
 
 .physical-state-section {
   display: grid;
-  grid-template-rows: auto repeat(4, 1fr);
+  grid-template-rows: auto 1fr;
+  gap: 2mm;
+}
+
+.physical-state-grid {
+  display: grid;
+  grid-template-columns: 63mm 1fr;
+  min-height: 22mm;
+}
+
+.state-rows {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
   gap: 1.6mm;
 }
 
 .state-row {
   display: grid;
-  grid-template-columns: 31mm 28mm 1fr;
+  grid-template-columns: 31mm 28mm;
   align-items: center;
   column-gap: 4mm;
-  border-bottom: .25mm solid var(--rule-light);
   font-size: 6.8pt;
   letter-spacing: .08em;
   min-height: 5.5mm;
@@ -373,9 +490,17 @@ body {
   border-radius: 50%;
 }
 
-.state-note {
-  border-bottom: .2mm solid var(--rule-light);
-  height: 4mm;
+.physical-state-notes {
+  border-left: .25mm solid var(--rule-light);
+  padding-left: 3mm;
+}
+
+.physical-state-notes-label {
+  color: var(--muted);
+  font-size: 6.2pt;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 .friction-scan {
@@ -383,13 +508,14 @@ body {
   flex-direction: column;
 }
 
-.friction-grid {
-  flex: 1;
-  margin-top: 3mm;
+.friction-scan .prompt {
+  margin-top: 2mm;
 }
 
-.friction-grid .ruled-area {
-  height: 100%;
+.friction-write-zone {
+  flex: 1;
+  min-height: 16mm;
+  border-bottom: .25mm solid var(--rule-light);
 }
 
 /* Daily execution */
@@ -404,6 +530,7 @@ body {
 }
 
 .training-log-section {
+  border-top: 0;
   min-height: 68mm;
 }
 
@@ -414,8 +541,6 @@ body {
   align-items: stretch;
   min-height: 51mm;
   margin-top: 2mm;
-  border-top: .25mm solid var(--rule);
-  border-bottom: .25mm solid var(--rule);
 }
 
 .training-writing {
@@ -428,7 +553,6 @@ body {
   align-self: stretch;
   background: var(--bg);
   border-left: .25mm solid var(--rule);
-  border-right: .25mm solid var(--rule);
 }
 
 .stat-row {
@@ -494,15 +618,18 @@ body {
 
 .calibration-line {
   display: grid;
-  grid-template-columns: 38mm 1fr;
+  grid-template-columns: 52mm 1fr;
   align-items: end;
   column-gap: 4mm;
   min-height: 8.5mm;
-  border-bottom: .25mm solid var(--rule-light);
   font-size: 6.6pt;
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
+}
+
+.calibration-line div:first-child {
+  white-space: nowrap;
 }
 
 /* Weekly review */
@@ -510,50 +637,93 @@ body {
   padding-bottom: 15mm;
 }
 
-.weekly-review-layout {
+.weekly-review-header {
   display: grid;
   grid-template-columns: 1fr 42mm;
   gap: 6mm;
+  align-items: start;
+  border-bottom: .35mm solid var(--rule);
+  padding-bottom: 4mm;
+  margin-bottom: 0;
+}
+
+.weekly-review-title {
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: .12em;
+  font-weight: 500;
+}
+
+.weekly-review-subtitle {
+  color: var(--muted);
+  font-size: 6.6pt;
+  line-height: 1.35;
+  margin-top: 2mm;
+}
+
+.weekly-review-week {
+  color: var(--muted);
+  font-size: 7pt;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.weekly-review-layout {
+  display: grid;
+  grid-template-columns: 1fr 42mm;
+  column-gap: 6mm;
   flex: 1;
 }
 
 .review-main-column {
   display: grid;
   grid-template-rows: repeat(6, 1fr);
-  gap: 3mm;
 }
 
 .review-prompt {
-  border-top: .25mm solid var(--rule);
-  padding-top: 2.5mm;
+  display: grid;
+  grid-template-columns: 34mm 1fr;
+  gap: 5mm;
+  border-bottom: .25mm solid var(--rule);
+  padding: 4mm 0 3mm;
+}
+
+.review-prompt-label {
+  font-size: 5.8pt;
+  font-weight: 700;
+  letter-spacing: .11em;
+  line-height: 1.35;
+  text-transform: uppercase;
 }
 
 .review-write-line {
-  height: calc(100% - 7mm);
-  min-height: 13mm;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 7.8mm,
-    var(--rule-light) 8mm
-  );
+  min-height: 16mm;
 }
 
 .review-side-column {
   border-left: .25mm solid var(--rule-light);
+  display: flex;
+  flex-direction: column;
   padding-left: 5mm;
 }
 
 .scorecard {
-  border-top: .25mm solid var(--rule);
-  padding-top: 2.5mm;
+  padding-top: 4mm;
+}
+
+.scorecard-note {
+  color: var(--muted);
+  font-size: 6.2pt;
+  line-height: 1.35;
+  margin-top: 1.2mm;
+  margin-bottom: 3mm;
 }
 
 .score-row {
   display: grid;
   grid-template-columns: 1fr 10mm;
   align-items: center;
-  min-height: 8mm;
+  min-height: 7.5mm;
   border-bottom: .25mm solid var(--rule-light);
   font-size: 6.8pt;
   letter-spacing: .08em;
@@ -566,7 +736,8 @@ body {
 }
 
 .next-vector-area {
-  margin-top: 9mm;
+  margin-top: auto;
+  padding-top: 4mm;
 }
 
 /* Notes */
@@ -574,9 +745,28 @@ body {
   padding-bottom: 15mm;
 }
 
+.notes-header {
+  border-bottom: .35mm solid var(--rule);
+  margin-bottom: 4mm;
+  padding-bottom: 3mm;
+}
+
+.notes-title {
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: .12em;
+  font-weight: 500;
+}
+
+.notes-instruction {
+  color: var(--muted);
+  font-size: 6.4pt;
+  line-height: 1.35;
+  margin-top: 3mm;
+}
+
 .full-note-grid {
   flex: 1;
-  border-top: .25mm solid var(--rule);
 }
 
 @page { size: A5 portrait; margin: 0; }
